@@ -34,7 +34,7 @@ Future<void> parse(Parser parser, json, int count) async {
     await parser.parse(json);
   }
   print(
-      "Parse Duration: ${DateTime.now().difference(start).inMicroseconds} Milli Second");
+      "Parse Duration: ${DateTime.now().difference(start).inMicroseconds} Micro Second");
 }
 
 Future<void> parseAsync(Parser parser, json, int count) async {
@@ -42,5 +42,5 @@ Future<void> parseAsync(Parser parser, json, int count) async {
   final res = await Future.wait(
       List.filled(count, 0).map((e) async => parser.parse(json)));
   print(
-      "Parse Async Duration: ${DateTime.now().difference(start).inMicroseconds} Milli Second");
+      "Parse Async Duration: ${DateTime.now().difference(start).inMicroseconds} Micro Second");
 }
