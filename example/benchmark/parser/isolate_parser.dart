@@ -23,6 +23,8 @@ class IsolateParser implements Parser {
     }, (json, receivePort.sendPort));
 
     final res = await completer.future;
+    receivePort.close();
+    isolate.kill();
     return res;
   }
 }

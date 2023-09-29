@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../parser.dart';
 
 class IsolatorParser implements Parser {
+  final uuid = Uuid();
   final Map<String, Completer> _mapTaskCompleter = {};
 
   Completer<IsolatePort>? _completer;
@@ -14,7 +15,7 @@ class IsolatorParser implements Parser {
   @override
   Future<Object> parse(String json) async {
     final port = await getPort();
-    final key = Uuid().v4();
+    final key = uuid.v4();
     final completer = Completer();
     _mapTaskCompleter[key] = completer;
 
@@ -22,8 +23,7 @@ class IsolatorParser implements Parser {
 
     port.sender.send((key, json));
 
-    final res = await completer.future;
-    return res;
+    return completer.future;
   }
 
   Future<IsolatePort> getPort() async {

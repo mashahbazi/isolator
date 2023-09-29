@@ -6,7 +6,7 @@ import 'parser/isolator_parser.dart';
 import 'parser/simple_parser.dart';
 
 void main() async {
-  const count = 200;
+  const count = 500;
   print("Test length: $count");
 
   for (final json in listJson) {
@@ -39,7 +39,9 @@ Future<void> parse(Parser parser, json, int count) async {
 
 Future<void> parseAsync(Parser parser, json, int count) async {
   DateTime start = DateTime.now();
-  await Future.wait(List.filled(100, 0).map((e) async => parser.parse(json)));
+  final res = await Future.wait(
+      List.filled(count, 0).map((e) async => parser.parse(json)));
+  print("Parsed Length: ${res.length}");
   print(
       "Parse Async Duration: ${DateTime.now().difference(start).inMilliseconds} Milli Second");
 }
