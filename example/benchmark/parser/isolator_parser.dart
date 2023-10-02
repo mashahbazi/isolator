@@ -6,6 +6,8 @@ import 'package:uuid/uuid.dart';
 
 import '../parser.dart';
 
+final list = [];
+
 class IsolatorParser implements Parser {
   final uuid = Uuid();
   final Map<String, Completer> _mapTaskCompleter = {};
@@ -16,14 +18,12 @@ class IsolatorParser implements Parser {
   Future<Object> parse(String json) async {
     final port = await getPort();
     final key = uuid.v4();
-    final completer = Completer();
-    _mapTaskCompleter[key] = completer;
-
-    port.receiver.onData(_onReceiveData);
+    // print(key);
+    _mapTaskCompleter[key] = Completer();
 
     port.sender.send((key, json));
 
-    return completer.future;
+    return await _mapTaskCompleter[key]!.future;
   }
 
   Future<IsolatePort> getPort() async {
@@ -37,6 +37,8 @@ class IsolatorParser implements Parser {
     sub.onData((data) {
       if (data is SendPort && !completer.isCompleted) {
         completer.complete(IsolatePort(data, sub));
+      }else{
+        _onReceiveData(data);
       }
     });
 
@@ -46,13 +48,14 @@ class IsolatorParser implements Parser {
         if (message is (String, String)) {
           final (key, json) = message;
           final obj = jsonDecode(json) as Object;
+          // print(obj.hashCode);
           sendPort.send((key, obj));
         }
       });
       sendPort.send(receivePort.sendPort);
     }, receivePort.sendPort);
-    final port = await completer.future;
-    return port;
+
+    return completer.future;
   }
 
   void _onReceiveData(data) {
@@ -60,7 +63,6 @@ class IsolatorParser implements Parser {
       final completer = _mapTaskCompleter[data.$1];
       if (completer != null) {
         completer.complete(data.$2);
-        _mapTaskCompleter.remove(data.$1);
       }
     }
   }

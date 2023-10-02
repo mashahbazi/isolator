@@ -9,9 +9,10 @@ final xLargeJson = '''[${List.filled(1000, smallJson).join(',')}]''';
 final xxLargeJson = '''[${List.filled(10000, smallJson).join(',')}]''';
 
 final listJson = <String>[
-  xsmallJson,
-  smallJson,
+  "[$xsmallJson]",
+  "[$smallJson]",
   mediumJson,
   largeJson,
-  xLargeJson
+  xLargeJson,
+  xxLargeJson,
 ];

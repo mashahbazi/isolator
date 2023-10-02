@@ -6,7 +6,7 @@ import 'parser/isolator_parser.dart';
 import 'parser/simple_parser.dart';
 
 void main() async {
-  const count = 500;
+  const count = 10;
   print("Test length: $count");
 
   for (final json in listJson) {
